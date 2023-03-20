@@ -25,7 +25,7 @@ app.use("/uploads", express.static("uploads"));
 //method,경로설정(요청,응답)
 app.get("/products", (req, res) => {
   models.Product.findAll({
-    order: [["createdAt", "ASC"]],//정렬기능
+    order: [["createdAt", "DESC"]],//정렬기능
     attributes: ["id", "name", "price", "seller", "imageUrl", "createdAt"],
     //limit:1,//제한을 거는거(1개만 나옴)
     //조회 결과값을 조정할 수 있다. 로딩속도 개선에 좋음
@@ -59,6 +59,7 @@ app.get("/products/:id", (req, res) => {
       console.log("에러 :", error);
     }); 
 });
+  
 //get은 데이터를 못보냄 받아뿌리기만함
 
 app.post('/image', upload.single('image'),(req,res) => {
@@ -74,7 +75,7 @@ app.post("/products", (req, res) => {
   const body = req.body;
   //submit으로 보낸 데이터를 req(요청).body로 받고 그걸 상수 body에 담음
   //1. 디스트럭처링으로 상수 body 의 값을 개별적으로 할당한다
-  const { name, description, price, seller } = body;
+  const { name, description, price, seller, imageUrl } = body;
   if (!name || !description || !price || !seller) {
     res.send("모든 필드를 입력해주세요");
   }
@@ -83,7 +84,8 @@ app.post("/products", (req, res) => {
     name, 
     description, 
     price, 
-    seller
+    seller,
+    imageUrl
   })
    //3. 데이터를 다루는 것은 기본적으로 비동기 통신을 지원하므로 promise 객체 활용
    .then((result) => {
