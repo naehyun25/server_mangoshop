@@ -2,7 +2,8 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const port = 8080;//http://127.0.0.1:8080/
+const port = process.env.PORT || 8080;
+//포트설정의 기본값을 쓰거나 없으면 8080번 포트를 사용하겠다.
 const models = require("./models");/* ./models/index.js */
 const multer = require("multer");
 const upload = multer({
