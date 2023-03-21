@@ -26,7 +26,7 @@ app.use("/uploads", express.static("uploads"));
 app.get("/products", (req, res) => {
   models.Product.findAll({
     order: [["createdAt", "DESC"]],//정렬기능
-    attributes: ["id", "name", "price", "seller", "imageUrl", "createdAt"],
+    attributes: ["id", "name", "price", "seller", "imageUrl", "createdAt", "soldout"],
     //limit:1,//제한을 거는거(1개만 나옴)
     //조회 결과값을 조정할 수 있다. 로딩속도 개선에 좋음
     //'참조컬럼','ASC'(오름차순) || 'DESC' (내림차순) =>안쓰면 id기준 오름차순
@@ -40,7 +40,28 @@ app.get("/products", (req, res) => {
     res.send("에러발생");
   });
 });
-  
+
+//api 요청 -> 전달 -> 응답
+app.post("/purchase/:id", (req, res) => {
+  const {id} =req.params;//한번에 표기
+  models.Product.update({
+    soldout:1,
+  },{
+    where:{id},
+  }
+  )
+  .then((result) => {
+    res.send({
+      result:true,
+    });
+  })
+  .catch((error) => {
+    console.error(error);
+    res.status(500).send("에러발생");
+  });
+});
+
+
 app.get("/products/:id", (req, res) => {
   const params = req.params;
   //const id=params.id;
@@ -69,6 +90,23 @@ app.post('/image', upload.single('image'),(req,res) => {
         imageUrl:file.path,
     })
 })
+app.get("/banners",(req,res)=>{
+  models.Banner.findAll({
+    limit:2,
+  })
+  .then((result) => {
+    res.send({
+      banners:result
+    })
+  })
+  .catch((err) => {
+    console.error(error);
+    //반환코드 지정
+    res.status(500).send("에러발생");
+  })
+
+})
+
 
 //상품생성데이터를 데이터베이스에 추가
 app.post("/products", (req, res) => {

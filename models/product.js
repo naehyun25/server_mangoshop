@@ -20,6 +20,13 @@ module.exports=( sequelize,DataTypes) => {
         imageUrl:{
             type:DataTypes.STRING(100),
             allowNull:true //allowNull default:true
+        },
+        soldout:{
+            type:DataTypes.INTEGER(1),
+            allowNull:true,
+            defaultValue:0,
+            //sqlite는 sql의 모든 언어를 지원하지 않기때문에 boolean 자료형도 지원하지않는다.  그래서 숫자로 구현하기로 한다.
+
         }
     })
 
